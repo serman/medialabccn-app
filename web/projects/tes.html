@@ -1,0 +1,22 @@
+<script>
+loadNewContent=function (){
+  $('.text-container div').textillate({ in: { effect: 'bounceInLeft', delay: 10 },type: 'char' });
+  setTimeout(function(){
+    console.log("load new content timeout " );
+    $("#previo").hide();
+    $('#content').show();
+  },3000);
+}
+</script>
+<div id="previo" class="text-container">
+    <div>
+      Esta tes </br>
+      trans europe slow
+
+    </div>
+</div>
+
+<video id="content" class="videoproyecto fullfachada" muted width="192" height="157" autoplay >
+  <source src="projects/videos/tes1.mp4" type="video/mp4">
+
+</video>

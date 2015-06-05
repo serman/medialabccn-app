@@ -1,0 +1,26 @@
+<script>
+var tiempoTexto=4000;
+loadNewContent=function (){
+  setTimeout(function(){
+    //console.log("load new content timeout" );
+    $("#previo").hide();
+    $('#content').show();
+  },tiempoTexto);
+
+
+}
+</script>
+<div id="previo" class="text-container">
+    <div>
+      Sonic Skate
+      Sonic Skate Plaza was selected as part of the “Solid Interfaces and Urban Games” Open Call from
+      MediaLab Prado Madrid. The project, developed under an open collaborative workshop, is an intervention in 
+      public space where the Plaza de las Letras becomes into a scenario for a “skated orchestra”. T
+
+    </div>
+</div>
+
+<video id="content" class="videoproyecto fullfachada" muted width="192" height="157" autoplay >
+  <source src="projects/videos/tes1.mp4" type="video/mp4">
+
+</video>
