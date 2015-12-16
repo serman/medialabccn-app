@@ -7,6 +7,7 @@
 exports.start = function() {
   nombreProcesoActual=null;
   tipoProgramaActual=null;
+  reproducir();
   this.update();
 };
 
@@ -15,46 +16,34 @@ exports.stop = function() {
 };
 
 exports.update = function() {
-  //hago algo
-  //vuelvo a temporizar la funcion
 
-  var p=proyectos[indiceLista];
-  console.log("fuera del timer "+ p.duracion + " " + p.url)
+  var p=global.proyectos[global.indiceLista];
+
+  console.log("fuera del timer "+ p.duracion + " " + p.url);
   timer1=setTimeout(function(){
-    console.log("rulo: " + indiceLista);
-    if(tipoProgramaActual!=null){
-      var exec = require("child_process").exec, child;
-      child=exec( "kill `pgrep "+nombreProcesoActual+"`",
-      function (error, stdout, stderr) {
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-      });
-    }
+      if(tipoProgramaActual!=null){
+        var exec = require("child_process").exec, child;
+        child=exec( "kill `pgrep "+nombreProcesoActual+"`",
+        function (error, stdout, stderr) {
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+        });
+      }
+      global.indiceLista+=1; if(indiceLista>=global.proyectos.length) indiceLista=0;
 
-    var p1=proyectos[indiceLista];
-    console.log("dentro del timer: "+ p1.duracion + " " + p1.url)
-    if(p1.tipo=="external"){
-      tipoProgramaActual="external";
-      var exec = require("child_process").exec, child;
-      child=exec('open /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/web/projects/apps/'+p1.url+'.app',
-      function (error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-      });
-    }
-    if(p1.tipo=="web"){
-      console.log("load url"+ p1.url);
-      mainWindow.webContents.send('updateWeb', p1.url); // prints "pong"
-      //mainWindow.loadUrl('file://' + __dirname + '/web/projects/'+ p1.url);
-    }
-    nombreProcesoActual=p1.url;
-
-    indiceLista+=1;
-    if(indiceLista>=proyectos.length) indiceLista=0;
-    exports.update();
+      reproducir();
+      exports.update();
   }, p.duracion);
 };
+
+var reproducir=function(){
+    var p1=global.proyectos[global.indiceLista];
+    console.log("dentro del timer: "+ p1.duracion + " " + p1.url);
+
+    tipoProgramaActual=p1.tipo;
+    mainWindow.webContents.send('updateWeb', global.indiceLista);
+    nombreProcesoActual=p1.url.replace('.json','');
+
+    
+}

@@ -1,0 +1,12 @@
+{
+	"simpleplayList":true,
+	"singleFile":"pl1.json",
+	"monday":"pl1.json",
+	"tuesday":"pl1.json",
+	"wednesday":"pl1.json",
+	"thursday":"pl1.json",
+	"friday":"pl1.json",
+	"saturday":"pl1.json",
+	"sunday":"pl1.json",
+	"random":false,
+}

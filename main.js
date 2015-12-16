@@ -25,8 +25,10 @@ app.on('ready', function() {
   //mainWindow = new BrowserWindow({kiosk:true});
   //https://github.com/atom/electron/blob/master/docs/api/browser-window.md
 
+
+
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/web/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/web/index.html');
 
   // Open the devtools.
   mainWindow.openDevTools();
@@ -38,16 +40,9 @@ app.on('ready', function() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-})
+});
 
 //require('electron-debug');
 
-
-
-global.proyectos=[
-  {'nombre':'tes','tipo':'web','url':'tes.html', 'duracion':5*1000},
-  {'nombre':'skate','tipo':'web','url':'skate.html', 'duracion':10*1000},
-  {'nombre':'otro','tipo':'external','url':'pixelVisualizer','duracion':15*1000},
-]
-
+global.proyectos=[];
 global.indiceLista=0;

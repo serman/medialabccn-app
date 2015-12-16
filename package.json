@@ -1,5 +1,8 @@
 {
-  "name"    : "medialabccn-app",
-  "version" : "0.1.0",
-  "main"    : "main.js"
+  "name": "medialabccn-app",
+  "version": "0.1.0",
+  "main": "main.js",
+  "dependencies": {
+    "jsonfile": "^2.2.3"
+  }
 }

@@ -1,0 +1,26 @@
+<script>
+var tiempoTexto=4000;
+loadNewContent=function (){
+  setTimeout(function(){
+    //console.log("load new content timeout" );
+    //$("#previo").hide();
+    var exec = require("child_process").exec, child;
+    child=exec('open /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/web/projects/apps/pixelVisualizer.app',
+    function (error, stdout, stderr) {
+    });
+
+  },tiempoTexto);
+
+}
+</script>
+<div id="previo" class="text-container">
+    <div>
+      PixelVisualizr
+      lo peta esto del pixelVisualizer
+      Sonic Skate Plaza was selected as part of the “Solid Interfaces and Urban Games” Open Call from
+      MediaLab Prado Madrid. The project,
+
+    </div>
+</div>
+
+

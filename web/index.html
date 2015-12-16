@@ -31,7 +31,7 @@
         <script src="js/vendor/handlebars-v3.0.3.js"></script>
 
     </head>
-    <body>
+    <body >
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -46,34 +46,65 @@
       <div id="f-body">  </div>
       <div id="f-frame">  </div>
       <div id="content-container">
+          <div class="text-container">
+              <div></div>
+          </div>
+          <video id="content-video" class="videoproyecto fullfachada" muted width="192" height="157" autoplay >
+            <source id="sourceVideo" src="" type="video/mp4">
 
+          </video>
       </div>
 
 
-      <div class="row">
-        <div class="col-md-6 col-md-offset-6">
-          <h2>proyectos</h2>
-          <ul id="projects-wrapper">
-
-          </ul>
-          <a href="#" id="play"> play </a> |
-          <a href="#" id="stop"> stop </a>
+      <div class="row" id="first-row">
+        <div class="col-md-6 col-md-offset-4">
+          <h2>ccn Player</h2>
         </div>
 
       </div>
+      <div class="row">
+        <div class="col-md-6 ">
+          <div id="controls" class="whitebox">
+            
+            <a href="#" id="play"> play <span class="glyphicon glyphicon-play" aria-hidden="true"></span> </a> |
+            <a href="#" id="stop"> stop <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> </a> |
+            <a href="#" id="pause"> pause <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> </a>
+            <div id="proyecto-actual"> </div>
+          </div>
+           <div id="playlists-list" class="whitebox">
 
-      <hr>
+             <h2> cargar nueva playlist </h2>
+               <input type='file' id='singleFile' name='singleFile'><br>
+               <button id="loadFile"/>loadFile</button>
+              
+           </div>
+        </div>
+          <div class="col-md-6 ">
+            <div id="projects-box" class="whitebox">
+               <h2>Lista de reproduccion</h2>
+              <ol id="projects-wrapper">
 
-      <footer>
-        <p>&copy; Company 2015</p>
-      </footer>
+              </ol>
+               <div style="margin-top:2em; font-size:0.8em;">
+                <strong style="color:#555"> Playlist Actual </strong> <span id="playlist-name"> </span>
+               </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+
+
     </div> <!-- /container -->
 
 
 
         <script src="js/vendor/bootstrap.min.js"></script>
 
-        <script src="js/main.js"></script>
+        <script src="js/ccn_main.js"></script>
         <script src="js/bower_components/letteringjs/jquery.lettering.js"></script>
         <script src="js/bower_components/textillate/jquery.textillate.js"></script>
     </body>
