@@ -123,14 +123,14 @@ function loadNewContent(project_index){
         $('#content-video').get(0).play()
         $("#text-container").fadeOut();
         $('#content-video').fadeIn();
-      }, jsonProjectFile.text_timeout);
+      }, hmsToMilliSecondsOnly(jsonProjectFile.text_timeout));
   }else if(type=="app"){
       setTimeout(function(){
         var exec = require("child_process").exec, child;
         child=exec('open '+ cfg.folderPath +"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource,
         function (error, stdout, stderr) {}
         )
-      }, jsonProjectFile.text_timeout);
+      }, hmsToMilliSecondsOnly(jsonProjectFile.text_timeout));
   }
 }
 
@@ -222,4 +222,20 @@ function stop(){
     var remote = require('remote');
     var tempo=remote.require('./timers.js');
     tempo.stop();
+}
+
+function hmsToMilliSecondsOnly(str) {
+    str=str.toString();
+    if(str.length==1){
+      str="0"+str;
+    }
+    var p = str.split(':'),
+        s = 0, m = 1;
+
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
+
+    return s*1000;
 }

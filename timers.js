@@ -17,9 +17,7 @@ exports.stop = function() {
 };
 
 exports.update = function() {
-
   var p=global.proyectos[global.indiceLista];
-
   console.log("fuera del timer "+ p.duracion + " " + p.url);
   timer1=setTimeout(function(){
       if(tipoProgramaActual!=null && tipoProgramaActual=="app"){
@@ -35,7 +33,7 @@ exports.update = function() {
 
       reproducir();
       exports.update();
-  }, p.duracion);
+  }, hmsToMilliSecondsOnly(p.duracion));
 };
 
 var reproducir=function(){
@@ -47,4 +45,17 @@ var reproducir=function(){
     nombreProcesoActual=p1.url.replace('.json','');
 
     
+}
+
+function hmsToMilliSecondsOnly(str) {
+  str=str.toString();
+    var p = str.split(':'),
+        s = 0, m = 1;
+
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
+
+    return s*1000;
 }
