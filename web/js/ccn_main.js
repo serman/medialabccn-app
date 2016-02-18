@@ -1,10 +1,13 @@
 /*run in renderer */
 
 //variables que se usan en todo el archivo
-var folderPath, playlistFilePath=""; //actual carpeta de trabajo y ruta archivo .json con la playlist
-var current_project_data={}; //contanido del proyecto.json actual
-var current_project_index=0;
-var proyectos_local=[ //volcado del archivo en playlistFilePath
+var cfg={}
+cfg.playlistFilePath=""; // ruta archivo .json con la playlist
+cfg.folderPath="" //carpeta del archivo.json de la playlis
+cfg.playlistContentFolder="" //carpeta donde están el resto de
+cfg.current_project_data={}; //contanido del proyecto.json actual
+cfg.current_project_index=0;
+cfg.proyectos_local=[ //volcado del archivo en cfg.playlistFilePath
  /* {'nombre':'tes','tipo':'web','url':'tes.html', 'duracion':5*1000},
   {'nombre':'otro','tipo':'external','url':'pixelVisualizer.html','duracion':15*1000},
   {'nombre':'skate','tipo':'web','url':'skate.html', 'duracion':10*1000},*/
@@ -17,24 +20,18 @@ $(function() {
   
 
   $('#play').on('click', function(event){
-    event.preventDefault();
-    var remote = require('remote');
-    var tempo=remote.require('./timers.js');
-    tempo.start();
+    play();
   });
 
   $('#stop').on('click', function(event){
-    event.preventDefault();
-    var remote = require('remote');
-    var tempo=remote.require('./timers.js');
-    tempo.stop();
+    stop();
   });
 
-  /*
+  
 
   $(".app").on('click',function(event){
         event.preventDefault();
-        console.log("tiriri click external");
+  /*      console.log("tiriri click external");
         var remote = require('remote');
         var exec = require("child_process").exec, child;
         child=exec('open /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/web/projects/apps/pixelVisualizer.app',
@@ -44,24 +41,24 @@ $(function() {
             if (error !== null) {
               console.log('exec error: ' + error);
             }
-        });
+        });*/
   });
 
   $('.prj-link').on('click', function(event){
     event.preventDefault();
   //  console.log('file://' + __dirname +"/"+ $(this).attr('href'))
-    loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
+   // loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
 
   });
   $('.prj-link').on('click', function(event){
     event.preventDefault();
   //  console.log('file://' + __dirname +"/"+ $(this).attr('href'))
-    loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));*/
-
+   // loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
+  });
   
    $('#singleFile').on('change' , function(e) { 
      /* file1=$(this)[0].files[0];
-      playlistFilePath=file1.path;      */
+      cfg.playlistFilePath=file1.path;      */
       
     });
    
@@ -78,34 +75,59 @@ $(function() {
 });
 
 /*function loadNewContent(project_index){
-    var murl=folderPath+"/projects/"+proyectos_local[project_index].url;
+    var murl=folderPath+"/projects/"+cfg.proyectos_local[project_index].url;
     console.log(murl);
     current_project=require(murl);
-    loadNewContent(current_project,proyectos_local[project_index]);
+    loadNewContent(current_project,cfg.proyectos_local[project_index]);
 }*/
 function loadNewContent(project_index){
-  var murl=folderPath+"/projects/"+proyectos_local[project_index].url;
+  var murl=cfg.folderPath+"/"+cfg.playlistContentFolder+"/"+cfg.proyectos_local[project_index].url;
   console.log("loadNewContent: " + murl);
-  current_project=require(murl);
+  try {
+    current_project=require(murl);
+  }
+  catch(err) {
+    console.log("File not found" + err)
+      return;
+  }
   var jsonProjectFile=current_project
-  var projectInfo=proyectos_local[project_index]
+  var projectInfo=cfg.proyectos_local[project_index]
   var type=projectInfo.tipo
+  //carga texto
   $('#proyecto-actual').empty().html(projectInfo.nombre)
-  $( "#content-container .text-container div" ).empty().html(jsonProjectFile.text ) 
-  $( "#previo").show();
+  $( "#content-container #text-container div" ).empty().html(jsonProjectFile.text ) 
+
+
+//////////TEXTILATE OPTIONS  ///////
+  if(typeof jsonProjectFile.options === "undefined" )
+    $( "#content-container #text-container div" ).textillate({ in: { effect: 'rollIn' } });
+  else
+    $( "#content-container #text-container div" ).textillate(jsonProjectFile.options);
+
+  $("#text-container").fadeIn();
+
   if(type=="video"){    
+    //carga video o app
       setTimeout(function(){
         console.log("Es video")
-        $('#sourceVideo').attr("src","file://"+ folderPath+"/projects/resources/"+jsonProjectFile.resource);
+        $('#sourceVideo').attr("src","file://"+ cfg.folderPath+"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource);
+        if(jsonProjectFile.fullfacade==true){
+          $('.videoproyecto').css('top','40px');
+          $('.videoproyecto').css('height','157px');
+        }
+        else{
+          $('.videoproyecto').css('top','72px');
+          $('.videoproyecto').css('height','125px');
+        }
         $('#content-video').get(0).load()
         $('#content-video').get(0).play()
-        $("#previo").hide();
-        $('#content-video').show();
+        $("#text-container").fadeOut();
+        $('#content-video').fadeIn();
       }, jsonProjectFile.text_timeout);
   }else if(type=="app"){
       setTimeout(function(){
         var exec = require("child_process").exec, child;
-        child=exec('open '+ folderPath + "/projects/resources/"+jsonProjectFile.resource,
+        child=exec('open '+ cfg.folderPath +"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource,
         function (error, stdout, stderr) {}
         )
       }, jsonProjectFile.text_timeout);
@@ -113,21 +135,28 @@ function loadNewContent(project_index){
 }
 
 function saveFileSettings(){
-        localStorage.setItem("singleFile", playlistFilePath);
+        localStorage.setItem("singleFile", cfg.playlistFilePath);
         p=require('path');
-        folderPath=p.dirname(playlistFilePath);
-        localStorage.setItem("singleFileFolderPath", folderPath);
+        cfg.folderPath=p.dirname(cfg.playlistFilePath);
+        localStorage.setItem("singleFileFolderPath", cfg.folderPath);
 }
 
 function loadPlaylistFile(path){
       $('#playlist-name').empty().html(path)
-      var localfile=require(path);   
+      try{
+        var localfile=require(path);   
+      }catch(err){
+        console.log("playlist File not found");
+        return;
+      }
       reloadPlaylist(localfile.playlist)
       //checkPlaylist(localFile) TODO
-      proyectos_local=localfile.playlist;
-      playlistFilePath=path;
+      cfg.proyectos_local=localfile.playlist;
+      cfg.playlistContentFolder=localfile.folder;
+      projecy_folder=localfile.playlist;
+      cfg.playlistFilePath=path;
       p=require('path')
-      folderPath=p.dirname(path);
+      cfg.folderPath=p.dirname(path);      
       return localfile.playlist;
 }
 
@@ -141,21 +170,30 @@ function reloadPlaylist(listObject){
 }
 
 function init(){
+ 
+  
+
   //1º cargo lista actual
   loadPlaylistFile(localStorage.getItem("singleFile"))
   var remote = require('remote');
+   //1.1º por si acaso vengo de un reload de la ventana, paro el timer
+  var tempo=remote.require('./timers.js');
+  tempo.stop();
+
   var util=remote.require('./util.js');
    //envio lista de proyectos al hilo principal
-  util.setProyectList(proyectos_local)
+  util.setProyectList(cfg.proyectos_local)
 
   var ipc =  require("electron").ipcRenderer;
-  ipc.on('updateWeb', function(event,message) {
+
+//on each "update web msg" coming from the timer.js:
+  ipc.on('updateWeb', function(event,message) { 
     //loadNewContent('file://' + __dirname +"/projects/"+ message);
     console.log(message)
 
     var path= localStorage.getItem("singleFileFolderPath")
-    current_project_index=message
-    loadNewContent(current_project_index);
+    cfg.current_project_index=message
+    loadNewContent(cfg.current_project_index);
   });  
 }
 
@@ -171,4 +209,17 @@ function initSettings(){
     localStorage.setItem("random", false);
   
   
+}
+
+function play(){
+  event.preventDefault();
+    var remote = require('remote');
+    var tempo=remote.require('./timers.js');
+    tempo.start();
+}
+function stop(){
+  event.preventDefault();
+    var remote = require('remote');
+    var tempo=remote.require('./timers.js');
+    tempo.stop();
 }

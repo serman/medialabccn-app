@@ -1,7 +1,7 @@
 // Constructor
-  var timer1;
-  var nombreProcesoActual;
-  var tipoProgramaActual;
+  var timer1=null;
+  var nombreProcesoActual=null;
+  var tipoProgramaActual=null;
 
 // class methods
 exports.start = function() {
@@ -13,6 +13,7 @@ exports.start = function() {
 
 exports.stop = function() {
   clearTimeout(timer1);
+  global.indiceLista=0;
 };
 
 exports.update = function() {
@@ -21,7 +22,7 @@ exports.update = function() {
 
   console.log("fuera del timer "+ p.duracion + " " + p.url);
   timer1=setTimeout(function(){
-      if(tipoProgramaActual!=null){
+      if(tipoProgramaActual!=null && tipoProgramaActual=="app"){
         var exec = require("child_process").exec, child;
         child=exec( "kill `pgrep "+nombreProcesoActual+"`",
         function (error, stdout, stderr) {

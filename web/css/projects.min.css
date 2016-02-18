@@ -3,18 +3,14 @@
   top: 72px;
   left: 40px;
 }
-#text-container {
+.text-container {
   position: absolute;
-  top: 40px;
+  top: 72px;
   left: 40px;
   width: 192px;
-  height: 157px;
-  z-index: 1000;
-  background-color: black;
 }
-#text-container div {
+.text-container div {
   padding: 3px;
-  padding-top: 40px;
   font-size: 10px;
   font-family: 'helvetica', 'arial';
   text-align: center;
