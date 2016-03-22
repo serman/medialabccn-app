@@ -1,126 +1,277 @@
 // out: projects.css, sourcemap: false, compress: false
+@bgcolor: #2B383E;
+@highcolor: #6FDAA0;
+@basecolor: #1F282F;
+@txtcolor: #B8B8B8;
+
+@font-face {
+    font-family: 'open_sansbold';
+    src: url('../fonts/OpenSans-Bold-webfont.eot');
+    src: url('../fonts/OpenSans-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans-Bold-webfont.woff') format('woff'),
+         url('../fonts/OpenSans-Bold-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans-Bold-webfont.svg#open_sansbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'open_sanslight';
+    src: url('../fonts/OpenSans-Light-webfont.eot');
+    src: url('../fonts/OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans-Light-webfont.woff') format('woff'),
+         url('../fonts/OpenSans-Light-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans-Light-webfont.svg#open_sanslight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'open_sansregular';
+    src: url('../fonts/OpenSans-Regular-webfont.eot');
+    src: url('../fonts/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/OpenSans-Regular-webfont.woff') format('woff'),
+         url('../fonts/OpenSans-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/OpenSans-Regular-webfont.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body{
+  background: @bgcolor;
+  color:@txtcolor;
+  /* Lista de reproducció: */
+  font-family: open_sansregular;
+  overflow:hidden;
+}
+a{
+  color:@txtcolor;
+  &:active,&:focus,&:visited{
+    color:@txtcolor;
+  }
+
+}
+.smalltext{
+  font-size: 11px;
+  font-family: open_sansregular;
+}
+h1{
+  /* Lista de reproducció: */
+font-family: open_sanslight;;
+font-size: 28px;
+color: @highcolor;
+text-align: right;
+
+}
+h2{
+  /* Lista de reproducció: */
+font-family: open_sanslight;;
+font-size: 18px;
+color: @highcolor;
+text-align: left;
+text-transform: uppercase;
+margin-bottom: 10px;
+}
+h3{
+  font-family:open_sanslight;
+  text-align: right;
+  margin-top: 0px;
+  color: @highcolor;
+}
+
+h4.subtitle{
+  /* Fachada digital de m: */
+  font-family: open_sanslight;
+  font-size: 16px;
+  color: @txtcolor;
+  text-align: right;
+}
+
+.computerfont{
+  font-family: courier;
+  font-weight: lighter;
+}
+/**** video player ***/
+
+
 .videoproyecto{
   position: absolute;
   top:40px+32px;
   left:40px;
 }
-#text-container{
-  position: absolute;
-  top:40px;
-  left:40px;
-  width:192px;
-  height: 157px;
-  z-index:1000;
-  background-color:black;
-  div{
-    padding:3px;
-    padding-top:40px;
-    font-size: 10px;
-    font-family: 'helvetica', 'arial';
-    text-align: center;
 
-
+#fachada{
+  cursor: none;
+  #text-container{
+    position: absolute;
+    top:40px;
+    left:40px;
+    width:192px;
+    height: 157px;
+    z-index:1000;
+    background-color:black;
+    display: none;
+    div{
+      padding:3px;
+      padding-top:40px;
+      font-size: 10px;
+      font-family: 'helvetica', 'arial';
+      text-align: center;
+    }
   }
-}
+  #img-container{
+    position: absolute;
+    top:40px;
+    left:40px;
+    display: none;
+  }
 
-video{
-  width:192;
-  height:125;
-  object-fit: cover;
-}
+  video{
+    width:192;
+    height:125;
+    object-fit: cover;
+  }
 
-#f-top{
-  position:absolute;
-  top:40px;
-  left:40px+36px+36px;
-  width:48px;
-  height:16px;
-  background-color: #333;
-}
-#f-top2{
-  position:absolute;
-  top:40px+16px;
-  left:40px+36px;
-  width:48px+36px+36px;
-  height:16px;
-  background-color: #555;
-}
-#f-body{
-  position:absolute;
-  top:40px+32px;
-  left:40px;
-  width:192px;
-  height:125px;
-  background-color: #777;
-}
-#f-frame{
-  position:absolute;
-  top:40px;
-  left:40px;
-  width:192px;
-  height:157px;
-  background: transparent;
-  border: 1px solid #fdd;
-}
+  #f-top{
+    position:absolute;
+    top:40px;
+    left:40px+36px+36px;
+    width:48px;
+    height:16px;
+    background-color: #000;
+  }
+  #f-top2{
+    position:absolute;
+    top:40px+16px;
+    left:40px+36px;
+    width:48px+36px+36px;
+    height:16px;
+    background-color: #000;
+  }
+  #f-body{
+    position:absolute;
+    top:40px+32px;
+    left:40px;
+    width:192px;
+    height:125px;
+    background-color: #000;
+  }
 
-#content{
-  display: none;
+  #f-frame{
+    position:absolute;
+    top:40px;
+    left:40px;
+    width:192px;
+    height:157px;
+    background: transparent;
+    border: 1px solid #fdd;
+  }
+
+  #content{
+    display: none;
+  }
+} /** fin fachada **/
+
+
+/********* fin minipantalla ****/
+
+
+
+.whitebox{
+  /* fondo: */
+  background: @basecolor;
+  border: 0px;
+  border-radius: 4px;
+  padding:10px 20px;
 }
 
 #first-row{
   min-height: 170px;
 }
-h2{
-  /* Lista de reproducció: */
-font-weight: bold;;
-font-size: 18px;
-color: #50E3C2;
-line-height: 36px;
-text-align: center;
-}
-body{
-  background: #000;
-  color:white;
-  /* Lista de reproducció: */
-font-family: Courier;
 
-}
-.whitebox{
-  color:#333;
-  /* fondo: */
-  background: #FFFFFF;
-  border: 2px solid #50E3C2;
-  border-radius: 4px;
-  padding:10px 20px;
-}
 #playlists-list{
-  margin-top: 20px;
+  margin-top: 200px;
 }
 #projects-box{
-  /* Rectangle 1: */
-background: rgba(126,210,33,0.20);
-border: 2px solid #50E3C2;
-color:#fff;
-a{
-
-  font-family: Courier;
-  font-size: 20px;
-  color: #FFFFFF;
-
-}
-}
-.name,.tipo, .duracion{
-  display: inline-block;
-  margin-left: 1em;
-  width:90px;
-  overflow: hidden;
-  line-height: 1em;
-}
-#projects-wrapper{
-  height: 350px;
-  overflow-y: scroll;
-  li{
-    border-bottom: 1px solid #333;
-    line-height: 2.5em;
+  a{
+    font-size: 16px;
+    font-family: open_sanslight;
   }
+  .name,.tipo, .duracion{
+    display: inline-block;
+    margin-left: 2%;
+    overflow: hidden;
+    line-height: 1.1em;
+  }
+  .name{
+    width: 60%;
+  }
+  .tipo{
+    width: 10%;
+    font-size: 0.7em;
+  }
+  .duracion{
+    width: 20%;
+    font-size: 0.8em;
+  }
+  #projects-wrapper{
+    height: 300px;
+
+    overflow-y: auto;
+    li{
+      border-bottom: 1px dotted @txtcolor;
+      padding-top:5px;
+       transition: background 1s, color 1s;
+    }
+    li.current{
+      background: @highcolor;
+      a{
+        color:@basecolor;
+      }
+      /* Base Copy 2: */
+
+    border-radius: 4px;
+    border: 0px;
+
+    }
+  }
+
+}
+
+#playlist-name{
+  .computerfont;
+  .smalltext;
+  margin-left:1em;
+  color:@highcolor;
+}
+
+
+
+#controls{
+  a#play,a#stop,a#pause{
+    display: inline-block;
+    margin-left:2em;
+    font-size: 30px;
+
+  }
+  #control-inner{
+    text-align: center;
+  }
+  #proyecto-actual{
+    font-family: open_sansregular;
+    margin-bottom: 1em;
+    font-size:14px;
+    color:@highcolor;
+    margin-left:2em;
+    height:1em;
+  }
+
+}
+footer{
+  width: 100%;
+  background:@basecolor;
+  height: 2em;
 }

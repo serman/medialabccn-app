@@ -3,16 +3,24 @@
 //variables que se usan en todo el archivo
 var cfg={}
 cfg.playlistFilePath=""; // ruta archivo .json con la playlist
-cfg.folderPath="" //carpeta del archivo.json de la playlis
+cfg.folderPath="" //carpeta indicada en el archivo.json con las playlists
 cfg.playlistContentFolder="" //carpeta donde están el resto de
 cfg.current_project_data={}; //contanido del proyecto.json actual
-cfg.current_project_index=0;
+
 cfg.proyectos_local=[ //volcado del archivo en cfg.playlistFilePath
  /* {'nombre':'tes','tipo':'web','url':'tes.html', 'duracion':5*1000},
   {'nombre':'otro','tipo':'external','url':'pixelVisualizer.html','duracion':15*1000},
   {'nombre':'skate','tipo':'web','url':'skate.html', 'duracion':10*1000},*/
+  
 ];
 
+
+
+var runtimeState={}
+runtimeState.currentTextTimeout=null; //temporizador que controla momento en el que el texto termina
+runtimeState.imageSlideIndex=1; //si es un player de imagenes esta es la actual;
+runtimeState.imageSlideTimeout=null;//si es un player de imagenes este es el timeout del control de tiempo;
+runtimeState.current_project_index=0;
 $(function() {  
   initSettings();
   init();
@@ -27,6 +35,9 @@ $(function() {
     stop();
   });
 
+  $('#pause').on('click', function(event){
+    pause();
+  });
   
 
   $(".app").on('click',function(event){
@@ -44,16 +55,16 @@ $(function() {
         });*/
   });
 
-  $('.prj-link').on('click', function(event){
+  $('#projects-wrapper').on('click','a', function(event){
     event.preventDefault();
-  //  console.log('file://' + __dirname +"/"+ $(this).attr('href'))
-   // loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
 
-  });
-  $('.prj-link').on('click', function(event){
-    event.preventDefault();
   //  console.log('file://' + __dirname +"/"+ $(this).attr('href'))
    // loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
+   var indx=$(this).data("index")
+   stop();
+   var remote = require('remote');
+   var tempo=remote.require('./timers.js');
+   tempo.goto(indx);
   });
   
    $('#singleFile').on('change' , function(e) { 
@@ -80,6 +91,10 @@ $(function() {
     current_project=require(murl);
     loadNewContent(current_project,cfg.proyectos_local[project_index]);
 }*/
+
+/* loadNewContent 
+  load a project.json file and play its content
+*/
 function loadNewContent(project_index){
   var murl=cfg.folderPath+"/"+cfg.playlistContentFolder+"/"+cfg.proyectos_local[project_index].url;
   console.log("loadNewContent: " + murl);
@@ -87,14 +102,18 @@ function loadNewContent(project_index){
     current_project=require(murl);
   }
   catch(err) {
-    console.log("File not found" + err)
+      alert("Problem loading new resource file:\n " +murl+ " \n Error \n " + err );
       return;
   }
+  clearTimeout(runtimeState.imageSlideTimeout);//porsiacaso
+
   var jsonProjectFile=current_project
   var projectInfo=cfg.proyectos_local[project_index]
   var type=projectInfo.tipo
   //carga texto
   $('#proyecto-actual').empty().html(projectInfo.nombre)
+  $('#projects-wrapper li.current').removeClass("current")
+  $('#projects-wrapper li:eq('+project_index+')').addClass("current")
   $( "#content-container #text-container div" ).empty().html(jsonProjectFile.text ) 
 
 
@@ -103,12 +122,12 @@ function loadNewContent(project_index){
     $( "#content-container #text-container div" ).textillate({ in: { effect: 'rollIn' } });
   else
     $( "#content-container #text-container div" ).textillate(jsonProjectFile.options);
-
+  $(".content-inner-container").fadeOut();
   $("#text-container").fadeIn();
 
   if(type=="video"){    
     //carga video o app
-      setTimeout(function(){
+      runtimeState.currentTextTimeout=setTimeout(function(){
         console.log("Es video")
         $('#sourceVideo').attr("src","file://"+ cfg.folderPath+"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource);
         if(jsonProjectFile.fullfacade==true){
@@ -124,8 +143,25 @@ function loadNewContent(project_index){
         $("#text-container").fadeOut();
         $('#content-video').fadeIn();
       }, hmsToMilliSecondsOnly(jsonProjectFile.text_timeout));
-  }else if(type=="app"){
-      setTimeout(function(){
+  }else if(type=="imagen"){
+        runtimeState.currentTextTimeout=setTimeout(function(){
+        runtimeState.imageSlideIndex=1;
+        
+        if(jsonProjectFile.fullfacade==true){
+          $('#img-container').css('top','40px');
+          $('#img-container').css('height','157px');
+        }
+        else{
+          $('#img-container').css('top','72px');
+          $('#img-container').css('height','125px');
+        }
+        playImages();
+        $("#text-container").fadeOut();
+        $('#img-container').fadeIn();
+      }, hmsToMilliSecondsOnly(jsonProjectFile.text_timeout));
+  }
+  else if(type=="app"){
+      runtimeState.currentTextTimeout=setTimeout(function(){
         var exec = require("child_process").exec, child;
         child=exec('open '+ cfg.folderPath +"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource,
         function (error, stdout, stderr) {}
@@ -146,7 +182,7 @@ function loadPlaylistFile(path){
       try{
         var localfile=require(path);   
       }catch(err){
-        console.log("playlist File not found");
+        alert("Playlist file not found or is not correct.  Error:\n " + err );
         return;
       }
       reloadPlaylist(localfile.playlist)
@@ -165,17 +201,27 @@ function reloadPlaylist(listObject){
      $('#projects-wrapper').empty()
      $.each(listObject,function(index,value){
         $('#projects-wrapper').append('<li> \
-                     <a href="projects/'+value.url+'" class="'+value.tipo+' prj-link" data-name="'+value.url+'"> <span class="name">'+value.nombre+'</span>' +  '<span class="tipo">'+value.tipo+'</span>' +  '<span class="duracion">'+Math.round(value.duracion/1000)+'</span>'+ '</a> </li>');
+                     <a href="#" data-index="'+index+'"+class="'+value.tipo+
+                     ' prj-link" data-name="'+value.url+'"> <span class="name">'+
+                     value.nombre+'</span>' +  '<span class="tipo">'+value.tipo+'</span>' +
+                     '<span class="duracion">'+value.duracion+'</span>'+ '</a> </li>');
       });
 }
 
 function init(){
- 
-  
+   var remote = require('remote');
+   var jsonFileCMDline= remote.getCurrentWindow().cmdParameterJSONFile;
+
+    if(!(jsonFileCMDline===undefined)){
+        //en lugar de cargar single file
+          loadPlaylistFile(jsonFileCMDline)
+    }
+    else{
+        loadPlaylistFile(localStorage.getItem("singleFile"))
+
+    }
 
   //1º cargo lista actual
-  loadPlaylistFile(localStorage.getItem("singleFile"))
-  var remote = require('remote');
    //1.1º por si acaso vengo de un reload de la ventana, paro el timer
   var tempo=remote.require('./timers.js');
   tempo.stop();
@@ -186,18 +232,19 @@ function init(){
 
   var ipc =  require("electron").ipcRenderer;
 
+
 //on each "update web msg" coming from the timer.js:
   ipc.on('updateWeb', function(event,message) { 
     //loadNewContent('file://' + __dirname +"/projects/"+ message);
     console.log(message)
 
     var path= localStorage.getItem("singleFileFolderPath")
-    cfg.current_project_index=message
-    loadNewContent(cfg.current_project_index);
+    runtimeState.current_project_index=message
+    loadNewContent(runtimeState.current_project_index);
   });  
 }
 
-//first time 
+//first time ever
 function initSettings(){
   if(localStorage.getItem("simpleplayList")===null)
     localStorage.setItem("simpleplayList", true);
@@ -218,10 +265,32 @@ function play(){
     tempo.start();
 }
 function stop(){
+  var index=runtimeState.current_project_index;
+  var type=cfg.proyectos_local[index].tipo;
+
   event.preventDefault();
     var remote = require('remote');
     var tempo=remote.require('./timers.js');
     tempo.stop();
+    clearTimeout(runtimeState.currentTextTimeout)
+    if(type=="video"){ 
+      $('#content-video').get(0).pause()
+      $("#text-container").fadeOut();
+      $('#content-video').fadeOut();
+    }
+    else if(type=="imagen"){ 
+      clearTimeout(runtimeState.imageSlideTimeout)
+      $("#text-container").fadeOut();
+      $('#img-container').fadeOut();
+    }
+    else if(type=="app"){ 
+      //TODO
+    }
+}
+
+function pause(){
+/*Detiene el temporizador de proyectos pero deja el proyecto actual y continua después al pulsar play si se ha pulsado pause antes*/
+//pause
 }
 
 function hmsToMilliSecondsOnly(str) {
@@ -238,4 +307,19 @@ function hmsToMilliSecondsOnly(str) {
     }
 
     return s*1000;
+}
+
+function playImages(){
+  var jsonProjectFile=current_project;
+  var _url="file://"+ cfg.folderPath+"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource+"/";
+  var imgname=runtimeState.imageSlideIndex.toString();
+
+  if(imgname.length==1){
+      imgname="0"+imgname;
+    }
+  console.log(_url+jsonProjectFile.prefix+imgname+jsonProjectFile.extension)
+  $('#img-container').attr('src',_url+jsonProjectFile.prefix+imgname+"."+jsonProjectFile.extension)
+  runtimeState.imageSlideIndex++;
+  runtimeState.imageSlideTimeout=setTimeout(playImages,jsonProjectFile.comic_timeout*1000);
+
 }

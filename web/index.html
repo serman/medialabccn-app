@@ -22,6 +22,7 @@
             }
         </style>
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/simple-line-icons.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/projects.css">
         <link rel="stylesheet" href="js/bower_components/animate.css/animate.css">
@@ -41,35 +42,41 @@
 
     <div class="container">
       <!-- Example row of columns -->
-      <div id="f-top"> </div>
-      <div id="f-top2">  </div>
-      <div id="f-body">  </div>
-      <div id="f-frame">  </div>
-      <div id="content-container">
-          <div id="text-container">
-              <div></div>
-          </div>
-          <video id="content-video" class="videoproyecto fullfachada" muted width="192" height="125" autoplay >
-            <source id="sourceVideo" src="" type="video/mp4">
-
-          </video>
+      <div id="fachada">
+        <div id="f-top"> </div>
+        <div id="f-top2">  </div>
+        <div id="f-body">  </div>
+        <div id="f-frame">  </div>
+        <div id="content-container">
+            <div id="text-container" >
+                <div></div>
+            </div>
+            <video id="content-video" class="videoproyecto fullfachada content-inner-container" muted width="192" height="125" autoplay >
+              <source id="sourceVideo" src="" type="video/mp4">
+            </video>
+            <img id="img-container" src="" class="content-inner-container">
+        </div>
       </div>
 
-
       <div class="row" id="first-row">
-        <div class="col-md-6 col-md-offset-4">
-          <h2>ccn Player</h2>
+        <div class="col-md-6 col-md-offset-6">
+          <div id="title-container" class="whitebox">
+            <h1>CCN Player</h1>
+            <h4 class="subtitle">Fachada digital de Medialab-prado</h4>
+          </div>
         </div>
 
       </div>
       <div class="row">
         <div class="col-md-6 ">
           <div id="controls" class="whitebox">
-            
-            <a href="#" id="play"> play <span class="glyphicon glyphicon-play" aria-hidden="true"></span> </a> |
-            <a href="#" id="stop"> stop <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> </a> |
-            <a href="#" id="pause"> pause <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> </a>
+            <div class="smalltext"> Playing: </div>
             <div id="proyecto-actual"> </div>
+            <div id="control-inner">
+              <a href="#" id="play"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+              <a href="#" id="stop"> <span class="" style="width:1em; height:1em; display:inline-block; border-radius: 3px; border: 2px solid #B8B8B8" aria-hidden="true"></span> </a> 
+              <a href="#" id="pause"> <span class="icon-control-pause" aria-hidden="true"></span> </a>
+            </div>
           </div>
            <div id="playlists-list" class="whitebox">
 
@@ -85,12 +92,16 @@
               <ol id="projects-wrapper">
 
               </ol>
-               <div style="margin-top:2em; font-size:0.8em;">
-                <strong style="color:#555"> Playlist Actual </strong> <span id="playlist-name"> </span>
-               </div>
+              
+            </div>
+            <div class="whitebox" style="margin-top:0.5em;" >
+                 <div>
+                    <strong class="smalltext"> Playlist Actual </strong> 
+                    <div id="playlist-name"> </div>
+                 </div>
             </div>
           </div>
-        </div>
+      </div>
 
 
 

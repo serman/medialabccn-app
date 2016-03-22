@@ -17,6 +17,10 @@ app.on('window-all-closed', function() {
     app.quit();
 });
 
+  console.log(process.argv)
+
+
+
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
@@ -30,6 +34,11 @@ app.on('ready', function() {
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/web/index.html');
 
+  /**** paso de parámetros a l lado del renderer ***/
+  if(! (process.argv[2]==undefined) ){ // 2 parametros ya por defecto vamos a por el 3º
+    console.log(process.argv[2]) // el primer parametro extra lo consideramos el nombre de la playlist. Ruta absoluta
+    var webContents = mainWindow.cmdParameterJSONFile=process.argv[2]
+  }
   // Open the devtools.
   mainWindow.openDevTools();
 
@@ -40,6 +49,8 @@ app.on('ready', function() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+
 });
 
 app.on('window-all-closed', function() {
