@@ -51,9 +51,12 @@ a{
   color:@txtcolor;
   &:active,&:focus,&:visited{
     color:@txtcolor;
+    text-decoration: none;
   }
-
 }
+  a#play,a#pause{
+    text-decoration: none;
+  }
 .smalltext{
   font-size: 11px;
   font-family: open_sansregular;
@@ -114,12 +117,35 @@ h4.subtitle{
     z-index:1000;
     background-color:black;
     display: none;
-    div{
+    div#text-body{
       padding:3px;
       padding-top:40px;
       font-size: 10px;
       font-family: 'helvetica', 'arial';
       text-align: center;
+      /*background-color: red;*/
+    }
+     div#text-head1{
+      padding-top:2px;
+      margin-left:72px;
+      margin-top:2px;
+      width: 48px;
+      height:14px;
+      font-size: 8px;
+      font-family: 'helvetica', 'arial';
+      text-align: center;
+      /*background-color: green;*/
+    }
+    div#text-head2{
+      padding-top:2px;
+      margin-left:36px;
+      margin-top:0px;
+      width: 120px;
+      height: 14px;
+      font-size: 8px;
+      font-family: 'helvetica', 'arial';
+      text-align: center;
+      /*background-color: blue;*/
     }
   }
   #img-container{
@@ -204,7 +230,7 @@ h4.subtitle{
     display: inline-block;
     margin-left: 2%;
     overflow: hidden;
-    line-height: 1.1em;
+    line-height: 1.4em;
   }
   .name{
     width: 60%;
@@ -270,6 +296,56 @@ h4.subtitle{
   }
 
 }
+
+
+
+/**** ticker *****/
+.ticker-wrap {
+    position: relative;
+    bottom: top;
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    padding-left: 80%; // offsets items to begin
+}
+
+.ticker {
+    display: inline-block;
+    height: 100%;
+    line-height: 100%;
+    white-space: nowrap;
+    padding-right: 100%; // taken from container as display inline-block
+}
+
+.ticker__item {
+    display: inline-block;   
+    font-size: 8px;
+    color: white;
+    text-transform: uppercase;
+}
+
+
+
+@keyframes ticker {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+    }
+    100% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+                transform: translate3d(-100%, 0, 0);
+    }
+}
+
+.ticker {
+    animation-name: ticker;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-duration: 10s; // tweak based on number of items/desired speed
+}
+
+/***********/
+
 footer{
   width: 100%;
   background:@basecolor;

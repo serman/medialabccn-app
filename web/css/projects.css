@@ -33,6 +33,11 @@ a:active,
 a:focus,
 a:visited {
   color: #B8B8B8;
+  text-decoration: none;
+}
+a#play,
+a#pause {
+  text-decoration: none;
 }
 .smalltext {
   font-size: 11px;
@@ -90,12 +95,35 @@ h4.subtitle {
   background-color: black;
   display: none;
 }
-#fachada #text-container div {
+#fachada #text-container div#text-body {
   padding: 3px;
   padding-top: 40px;
   font-size: 10px;
   font-family: 'helvetica', 'arial';
   text-align: center;
+  /*background-color: red;*/
+}
+#fachada #text-container div#text-head1 {
+  padding-top: 2px;
+  margin-left: 72px;
+  margin-top: 2px;
+  width: 48px;
+  height: 14px;
+  font-size: 8px;
+  font-family: 'helvetica', 'arial';
+  text-align: center;
+  /*background-color: green;*/
+}
+#fachada #text-container div#text-head2 {
+  padding-top: 2px;
+  margin-left: 36px;
+  margin-top: 0px;
+  width: 120px;
+  height: 14px;
+  font-size: 8px;
+  font-family: 'helvetica', 'arial';
+  text-align: center;
+  /*background-color: blue;*/
 }
 #fachada #img-container {
   position: absolute;
@@ -169,7 +197,7 @@ h4.subtitle {
   display: inline-block;
   margin-left: 2%;
   overflow: hidden;
-  line-height: 1.1em;
+  line-height: 1.4em;
 }
 #projects-box .name {
   width: 60%;
@@ -226,6 +254,45 @@ h4.subtitle {
   margin-left: 2em;
   height: 1em;
 }
+/**** ticker *****/
+.ticker-wrap {
+  position: relative;
+  bottom: top;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+  padding-left: 80%;
+}
+.ticker {
+  display: inline-block;
+  height: 100%;
+  line-height: 100%;
+  white-space: nowrap;
+  padding-right: 100%;
+}
+.ticker__item {
+  display: inline-block;
+  font-size: 8px;
+  color: white;
+  text-transform: uppercase;
+}
+@keyframes ticker {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+.ticker {
+  animation-name: ticker;
+  animation-iteration-count: 1;
+  animation-timing-function: linear;
+  animation-duration: 10s;
+}
+/***********/
 footer {
   width: 100%;
   background: #1F282F;

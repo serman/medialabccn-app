@@ -111,19 +111,23 @@ function loadNewContent(project_index){
   var projectInfo=cfg.proyectos_local[project_index]
   var type=projectInfo.tipo
   //carga texto
-  $('#proyecto-actual').empty().html(projectInfo.nombre)
+  $('#proyecto-actual').empty().html(jsonProjectFile.fulltitle)
   $('#projects-wrapper li.current').removeClass("current")
   $('#projects-wrapper li:eq('+project_index+')').addClass("current")
-  $( "#content-container #text-container div" ).empty().html(jsonProjectFile.text ) 
-
+  $( "#content-container #text-container div#text-body" ).empty().html(jsonProjectFile.text ) 
+  $("#content-container #text-container div#text-head1").empty().html(jsonProjectFile.year)
+  $("#content-container #text-container #text-head2 div.ticker__item").empty().html(jsonProjectFile.fulltitle)
+  console.log("json author"+jsonProjectFile.fulltitle)
 
 //////////TEXTILATE OPTIONS  ///////
   if(typeof jsonProjectFile.options === "undefined" )
-    $( "#content-container #text-container div" ).textillate({ in: { effect: 'rollIn' } });
+    $( "#content-container #text-container div#text-body" ).textillate({ in: { effect: 'rollIn' } });
   else
-    $( "#content-container #text-container div" ).textillate(jsonProjectFile.options);
-  $(".content-inner-container").fadeOut();
-  $("#text-container").fadeIn();
+    $( "#content-container #text-container div#text-body" ).textillate(jsonProjectFile.options);
+
+  
+    $(".content-inner-container").fadeOut();
+    $("#text-container").fadeIn();
 
   if(type=="video"){    
     //carga video o app
@@ -185,25 +189,31 @@ function loadPlaylistFile(path){
         alert("Playlist file not found or is not correct.  Error:\n " + err );
         return;
       }
-      reloadPlaylist(localfile.playlist)
+      preprocessPlaylist(localfile.playlist)
+      populateHtmlPlaylist(localfile.playlist)
       //checkPlaylist(localFile) TODO
       cfg.proyectos_local=localfile.playlist;
       cfg.playlistContentFolder=localfile.folder;
-      projecy_folder=localfile.playlist;
+      //project_folder=localfile.playlist;
       cfg.playlistFilePath=path;
       p=require('path')
       cfg.folderPath=p.dirname(path);      
       return localfile.playlist;
 }
 
-function reloadPlaylist(listObject){
+function preprocessPlaylist(listObject){
+
+
+}
+
+function populateHtmlPlaylist(listObject){
 
      $('#projects-wrapper').empty()
      $.each(listObject,function(index,value){
         $('#projects-wrapper').append('<li> \
                      <a href="#" data-index="'+index+'"+class="'+value.tipo+
                      ' prj-link" data-name="'+value.url+'"> <span class="name">'+
-                     value.nombre+'</span>' +  '<span class="tipo">'+value.tipo+'</span>' +
+                     value.url+'</span>' +  '<span class="tipo">'+value.tipo+'</span>' +
                      '<span class="duracion">'+value.duracion+'</span>'+ '</a> </li>');
       });
 }
