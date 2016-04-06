@@ -2,10 +2,14 @@
 
 //variables que se usan en todo el archivo
 var cfg={}
+cfg.playlistFile=""
+cfg.playlistDays=[]
 cfg.playlistFilePath=""; // ruta archivo .json con la playlist
 cfg.folderPath="" //carpeta indicada en el archivo.json con las playlists
 cfg.playlistContentFolder="" //carpeta donde están el resto de
 cfg.current_project_data={}; //contanido del proyecto.json actual
+
+cfg.simpleplayList = true;
 
 cfg.proyectos_local=[ //volcado del archivo en cfg.playlistFilePath
  /* {'nombre':'tes','tipo':'web','url':'tes.html', 'duracion':5*1000},
@@ -13,6 +17,74 @@ cfg.proyectos_local=[ //volcado del archivo en cfg.playlistFilePath
   {'nombre':'skate','tipo':'web','url':'skate.html', 'duracion':10*1000},*/
   
 ];
+
+//first time ever start "settings database"
+function initSettings(){
+  if(localStorage.getItem("simpleplayList")===null)
+    localStorage.setItem("simpleplayList", true);
+
+  if(localStorage.getItem("singleFile")===null)
+    localStorage.setItem("singleFile", ""); //nombre del archivo playlist .json
+  if(localStorage.getItem("multipleFiles")===null)
+    localStorage.setItem("multipleFiles", JSON.stringify(["","","","","","",""]) ); //nombre del archivo playlist .json
+  /*if(localStorage.getItem("singleFileFolderPath")===null) //nombre de la carpeta donde estan los demás archivos
+    localStorage.setItem("singleFileFolderPath", ""); */
+  if(localStorage.getItem("random")===null)
+    localStorage.setItem("random", false); 
+}
+
+function loadSettings(){
+//1 get all settings stored in database and put it in the right variables
+  cfg.simpleplayList= localStorage.getItem("simpleplayList")=="true"?true:false;
+  //1º comprobamos entrada de datos
+  var remote = require('remote');
+   var jsonFileCMDline= remote.getCurrentWindow().cmdParameterJSONFile;
+    if(!(jsonFileCMDline===undefined)){
+        //en lugar de cargar single file
+          loadPlaylistFile(jsonFileCMDline)
+    }
+    else{ //NO se ha pasado el archivo por la linea de comandos
+      
+      populatePlaylistSection(true);    
+    }
+    
+}
+
+function populatePlaylistSection(loadPlaylist){
+  if(cfg.simpleplayList==true){
+    cfg.playlistFile=localStorage.getItem("singleFile");
+      if(loadPlaylist){        
+        loadPlaylistFile(cfg.playlistFile);
+      }
+    }else{ //UNA PLAYLIST PARA CADA DIA
+      var d = new Date();
+      var n = d.getDay();
+      cfg.playlistDays = JSON.parse(localStorage.getItem("multipleFiles"));
+      cfg.playlistFile=cfg.playlistDays[n];
+      if(loadPlaylist){        
+        loadPlaylistFile(cfg.playlistFile);
+      }
+    }
+
+  if(cfg.simpleplayList==true){
+    $('#panel-days-playlist').prop('checked', false);
+    $('#single-playlist-panel').fadeIn()
+    $('#multiple-playlist-panel').fadeOut() 
+    $('#single-playlist-panel .filename').text(cfg.playlistFile.split(/(\\|\/)/g).pop())
+  }else{
+    $('#panel-days-playlist').prop('checked', true);
+    $('#single-playlist-panel').fadeOut()
+    $('#multiple-playlist-panel').fadeIn() 
+    $('#multiple-playlist-panel .filename').each(function( index ) {
+      $(this).text(cfg.playlistDays[index].split(/(\\|\/)/g).pop())
+      var d = new Date();
+      var n = d.getDay();
+      if(n==index)
+        $(this).addClass('active')
+
+    });
+  }
+}
 
 
 
@@ -56,33 +128,20 @@ $(function() {
   });
 
   $('#projects-wrapper').on('click','a', function(event){
-    event.preventDefault();
-
-  //  console.log('file://' + __dirname +"/"+ $(this).attr('href'))
-   // loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
-   var indx=$(this).data("index")
-   stop();
-   var remote = require('remote');
-   var tempo=remote.require('./timers.js');
-   tempo.goto(indx);
+      event.preventDefault();
+    //  console.log('file://' + __dirname +"/"+ $(this).attr('href'))
+     // loadNewContent('file://' + __dirname +"/"+ $(this).attr('href'));
+     var indx=$(this).data("index")
+     stop();
+     var remote = require('remote');
+     var tempo=remote.require('./timers.js');
+     tempo.goto(indx);
   });
   
-   $('#singleFile').on('change' , function(e) { 
-     /* file1=$(this)[0].files[0];
-      cfg.playlistFilePath=file1.path;      */
-      
-    });
-   
-   $('#loadFile').on('click', function(event){
-      var file1=$('#singleFile')[0].files[0]; //comando para cargar ruta completa:
-      if(typeof file1 === "undefined"){
 
-      }else{//si he seleccionado nuevo archivo lo cargo
-        console.log("loading..." + file1)        
-        loadPlaylistFile(file1.path);
-        saveFileSettings();
-      }
-    });
+   
+
+
 });
 
 /*function loadNewContent(project_index){
@@ -174,13 +233,6 @@ function loadNewContent(project_index){
   }
 }
 
-function saveFileSettings(){
-        localStorage.setItem("singleFile", cfg.playlistFilePath);
-        p=require('path');
-        cfg.folderPath=p.dirname(cfg.playlistFilePath);
-        localStorage.setItem("singleFileFolderPath", cfg.folderPath);
-}
-
 function loadPlaylistFile(path){
       $('#playlist-name').empty().html(path)
       try{
@@ -219,17 +271,8 @@ function populateHtmlPlaylist(listObject){
 }
 
 function init(){
-   var remote = require('remote');
-   var jsonFileCMDline= remote.getCurrentWindow().cmdParameterJSONFile;
-
-    if(!(jsonFileCMDline===undefined)){
-        //en lugar de cargar single file
-          loadPlaylistFile(jsonFileCMDline)
-    }
-    else{
-        loadPlaylistFile(localStorage.getItem("singleFile"))
-
-    }
+   loadSettings()
+  var remote = require('remote');
 
   //1º cargo lista actual
    //1.1º por si acaso vengo de un reload de la ventana, paro el timer
@@ -247,26 +290,14 @@ function init(){
   ipc.on('updateWeb', function(event,message) { 
     //loadNewContent('file://' + __dirname +"/projects/"+ message);
     console.log(message)
-
-    var path= localStorage.getItem("singleFileFolderPath")
     runtimeState.current_project_index=message
     loadNewContent(runtimeState.current_project_index);
   });  
 }
 
-//first time ever
-function initSettings(){
-  if(localStorage.getItem("simpleplayList")===null)
-    localStorage.setItem("simpleplayList", true);
-  if(localStorage.getItem("singleFile")===null)
-    localStorage.setItem("singleFile", "");
-  if(localStorage.getItem("singleFileFolderPath")===null)
-    localStorage.setItem("singleFileFolderPath", "");
-  if(localStorage.getItem("random")===null)
-    localStorage.setItem("random", false);
-  
-  
-}
+
+
+
 
 function play(){
   event.preventDefault();

@@ -90,11 +90,66 @@
            <div id="playlists-list" class="whitebox">
 
              <h2> cargar nueva playlist </h2>
-               <input type='file' id='singleFile' name='singleFile'><br>
-               <button id="loadFile"/>loadFile</button>
-              
-           </div>
+             <input type="checkbox" id="panel-days-playlist"> Elegir una playlist diferente cada día </input>
+
+             <div id="single-playlist-panel">
+               <div class="day-upload">
+                  <label for="singleFile">
+                        Playlist <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>                      
+                 <input type='file' id='singleFile' name='singleFile'/> <a href="#" class="load-playlist-btn-single" data-number="3"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                </div> 
+             </div>
+
+              <div id="multiple-playlist-panel">                  
+                  <div class="day-upload">
+                      <label for="multipleFileLunes">
+                        <span class="playlist-day"> Lunes </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileLunes' name='multipleFileLunes' id='multipleFileLunes' type="file"/> <a href="#" class="load-playlist-btn" data-number="0"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                  </div> 
+                  <div class="day-upload">
+                      <label for="multipleFileMartes">
+                        <span class="playlist-day"> Martes </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileMartes' name='multipleFileMartes' id='multipleFileMartes' type="file"/>  <a href="#" class="load-playlist-btn" data-number="1"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+
+                  </div>   
+                  <div class="day-upload">
+                      <label for="multipleFileMiercoles">
+                        <span class="playlist-day"> Miércoles </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileMiercoles' name='multipleFileMiercoles' id='multipleFileMiercoles' type="file"/> <a href="#" class="load-playlist-btn" data-number="2"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                  </div>   
+                  <div class="day-upload">
+                      <label for="multipleFileJueves">
+                        <span class="playlist-day"> Jueves </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileJueves' name='multipleFileJueves' id='multipleFileJueves' type="file"/> <a href="#" class="load-playlist-btn" data-number="3"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                  </div>   
+                  <div class="day-upload">
+                      <label for="multipleFileViernes">
+                        <span class="playlist-day"> Viernes </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileViernes' name='multipleFileViernes' id='multipleFileViernes' type="file"/> <a href="#" class="load-playlist-btn" data-number="4"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                  </div>   
+                  <div class="day-upload">
+                      <label for="multipleFileSabado">
+                        <span class="playlist-day"> Sabado </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileSabado' name='multipleFileSabado' id='multipleFileSabado' type="file"/> <a href="#" class="load-playlist-btn" data-number="5"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                  </div>   
+                  <div class="day-upload">
+                      <label for="multipleFileDomingo">
+                        <span class="playlist-day"> Domingo </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                      </label>
+                      <input class='multipleFile multipleFileDomingo' name='multipleFileDomingo' id='multipleFileDomingo' type="file"/> <a href="#" class="load-playlist-btn" data-number="6"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
+                  </div>                                   
+             </div> <!-- fin panel multiples dias #multiple-playlist-panel-->
+             <a href="#" id="playlist-panel-save" class="btn btn-std"> Guardar cambios <span class="glyphicon glyphicon-save"></span> </a>
+          </div>  <!-- fin panel playlist #playlists-list-->
         </div>
+     <!-- __________ lista reproduccion _____________________ -->   
           <div class="col-md-6 ">
             <div id="projects-box" class="whitebox">
                <h2>Lista de reproduccion</h2>
@@ -125,6 +180,7 @@
         <script src="js/vendor/bootstrap.min.js"></script>
 
         <script src="js/ccn_main.js"></script>
+        <script src="js/ccn_playlists.js"></script>
         <script src="js/bower_components/letteringjs/jquery.lettering.js"></script>
         <script src="js/bower_components/textillate/jquery.textillate.js"></script>
     </body>

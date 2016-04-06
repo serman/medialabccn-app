@@ -219,7 +219,7 @@ h4.subtitle{
 }
 
 #playlists-list{
-  margin-top: 200px;
+  margin-top: 50px;
 }
 #projects-box{
   a{
@@ -350,4 +350,42 @@ footer{
   width: 100%;
   background:@basecolor;
   height: 2em;
+}
+
+/*** **/
+.day-upload > input{
+  display: none;
+}
+.day-upload label{
+  cursor:pointer
+}
+
+
+#singleFile .multipleFile{
+
+}
+span.filename{
+  display: inline-block;
+  border: 1px solid #6A6A67;
+  background-color: #2B383E;
+  padding: 0px 4px;
+  margin:0px 4px;
+  padding-bottom: 2px;
+  width: 200px;
+  color:#6FDAA0;
+  .computerfont
+}
+span.filename.active{
+  background-color: @highcolor;
+  color:@bgcolor;
+}
+span.playlist-day{
+  display: inline-block;
+  width:100px;
+}
+
+a.load-playlist-btn, a.load-playlist-btn-single{
+  display: inline-block;
+  margin-left:1em;
+  float: right;
 }

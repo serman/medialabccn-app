@@ -1,8 +1,22 @@
 {
   "name": "medialabccn-app",
   "version": "0.1.0",
+  "description": "A minimal Electron application",
   "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serman/medialabccn-app.git"
+  },
+  "author": "Sergio Galan",
+  "license": "CC0-1.0",
   "dependencies": {
     "jsonfile": "^2.2.3"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.0"
   }
+
 }
