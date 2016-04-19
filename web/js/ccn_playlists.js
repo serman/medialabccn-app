@@ -112,10 +112,5 @@ $(function() {
 
 });
 
-function saveFileSettings(){
-        localStorage.setItem("singleFile", cfg.playlistFilePath);
-        //p=require('path');
-        //cfg.folderPath=p.dirname(cfg.playlistFilePath);
-        //localStorage.setItem("singleFileFolderPath", cfg.folderPath);
-}
+
 

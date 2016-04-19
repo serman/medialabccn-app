@@ -1,12 +1,22 @@
 /*run in renderer */
 
 //variables que se usan en todo el archivo
+
+/* ejemplo Archivo
+ playlistFilePath = /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/external/ccn/ccn.json
+folderPath = /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/external/ccn/
+current_project_data= contenido de /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/external/ccn/archivo/archivo.json
+ /Users/sergiogalan/Proyectos/medialabCCN/medialabccn-app/external/ccn/archivo/
+ */
+
 var cfg={}
-cfg.playlistFile=""
 cfg.playlistDays=[]
-cfg.playlistFilePath=""; // ruta archivo .json con la playlist
-cfg.folderPath="" //carpeta indicada en el archivo.json con las playlists
-cfg.playlistContentFolder="" //carpeta donde están el resto de
+cfg.playlistFile=""// ruta archivo .json con la playlist
+
+cfg.folderPath="" //carpeta contenedora del archivo.json con las playlists
+
+//cfg.playlistContentFolder="" //carpeta donde están el resto de
+
 cfg.current_project_data={}; //contanido del proyecto.json actual
 
 cfg.simpleplayList = true;
@@ -14,8 +24,7 @@ cfg.simpleplayList = true;
 cfg.proyectos_local=[ //volcado del archivo en cfg.playlistFilePath
  /* {'nombre':'tes','tipo':'web','url':'tes.html', 'duracion':5*1000},
   {'nombre':'otro','tipo':'external','url':'pixelVisualizer.html','duracion':15*1000},
-  {'nombre':'skate','tipo':'web','url':'skate.html', 'duracion':10*1000},*/
-  
+  {'nombre':'skate','tipo':'web','url':'skate.html', 'duracion':10*1000},*/  
 ];
 
 
@@ -24,6 +33,7 @@ runtimeState.currentTextTimeout=null; //temporizador que controla momento en el 
 runtimeState.imageSlideIndex=1; //si es un player de imagenes esta es la actual;
 runtimeState.imageSlideTimeout=null;//si es un player de imagenes este es el timeout del control de tiempo;
 runtimeState.current_project_index=0;
+runtimeState.current_project_folder=""
 runtimeState.firstTime=false;
 
 
@@ -155,7 +165,6 @@ function loadPlaylistFile(path){
       cfg.proyectos_local=localfile.playlist;
       cfg.playlistContentFolder=localfile.folder;
       //project_folder=localfile.playlist;
-      cfg.playlistFilePath=path;
       p=require('path')
       cfg.folderPath=p.dirname(path);      
       return localfile.playlist;
@@ -246,7 +255,10 @@ $(function() {
   load a project.json file and play its content
 */
 function loadNewContent(project_index){
-  var murl=cfg.folderPath+"/"+cfg.playlistContentFolder+"/"+cfg.proyectos_local[project_index].url;
+  //carga json del proyecto
+  runtimeState.current_project_folder=cfg.proyectos_local[project_index].url
+  var murl=cfg.folderPath+"/"+runtimeState.current_project_folder+"/"+runtimeState.current_project_folder+".json";
+
   console.log("loadNewContent: " + murl);
   try {
     current_project=require(murl);
@@ -283,7 +295,7 @@ function loadNewContent(project_index){
     //carga video o app
       runtimeState.currentTextTimeout=setTimeout(function(){
         console.log("Es video")
-        $('#sourceVideo').attr("src","file://"+ cfg.folderPath+"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource);
+        $('#sourceVideo').attr("src","file://"+ cfg.folderPath+"/"+runtimeState.current_project_folder+"/"+jsonProjectFile.resource);
         if(jsonProjectFile.fullfacade==true){
           $('.videoproyecto').css('top','40px');
           $('.videoproyecto').css('height','157px');
@@ -317,13 +329,12 @@ function loadNewContent(project_index){
   else if(type=="app"){
       runtimeState.currentTextTimeout=setTimeout(function(){
         var exec = require("child_process").exec, child;
-        child=exec('open '+ cfg.folderPath +"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource,
+        child=exec('open '+ cfg.folderPath +"/"+runtimeState.current_project_folder+"/"+jsonProjectFile.resource,
         function (error, stdout, stderr) {}
         )
       }, hmsToMilliSecondsOnly(jsonProjectFile.text_timeout));
   }
 }
-
 
 
 
@@ -380,7 +391,7 @@ function hmsToMilliSecondsOnly(str) {
 
 function playImages(){
   var jsonProjectFile=current_project;
-  var _url="file://"+ cfg.folderPath+"/"+cfg.playlistContentFolder+"/resources/"+jsonProjectFile.resource+"/";
+  var _url="file://"+ cfg.folderPath+"/"+runtimeState.current_project_folder+"/"+jsonProjectFile.resource+"/";
   var imgname=runtimeState.imageSlideIndex.toString();
 
   if(imgname.length==1){
