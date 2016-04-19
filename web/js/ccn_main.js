@@ -18,10 +18,24 @@ cfg.proyectos_local=[ //volcado del archivo en cfg.playlistFilePath
   
 ];
 
+
+var runtimeState={}
+runtimeState.currentTextTimeout=null; //temporizador que controla momento en el que el texto termina
+runtimeState.imageSlideIndex=1; //si es un player de imagenes esta es la actual;
+runtimeState.imageSlideTimeout=null;//si es un player de imagenes este es el timeout del control de tiempo;
+runtimeState.current_project_index=0;
+runtimeState.firstTime=false;
+
+
+/************************** fin variables *********/
+
 //first time ever start "settings database"
 function initSettings(){
-  if(localStorage.getItem("simpleplayList")===null)
+  if(localStorage.getItem("simpleplayList")===null){
+    runtimeState.firstTime=true;
     localStorage.setItem("simpleplayList", true);
+
+  }
 
   if(localStorage.getItem("singleFile")===null)
     localStorage.setItem("singleFile", ""); //nombre del archivo playlist .json
@@ -33,6 +47,41 @@ function initSettings(){
     localStorage.setItem("random", false); 
 }
 
+function emptySettings(){
+  
+    localStorage.removeItem("simpleplayList");  
+    localStorage.removeItem("singleFile"); //nombre del archivo playlist .json
+    localStorage.removeItem("multipleFiles"); //nombre del archivo playlist .json
+  /*if(localStorage.getItem("singleFileFolderPath")===null) //nombre de la carpeta donde estan los demás archivos
+    localStorage.setItem("singleFileFolderPath", ""); */
+    localStorage.removeItem("random"); 
+}
+
+function init(){
+   loadSettings()
+  var remote = require('remote');
+  //1º cargo lista actual
+   //1.1º por si acaso vengo de un reload de la ventana, paro el timer
+  var tempo=remote.require('./timers.js');
+  tempo.stop();
+  var util=remote.require('./util.js');
+   //envio lista de proyectos al hilo principal
+  util.setProyectList(cfg.proyectos_local)
+  var ipc =  require("electron").ipcRenderer;
+
+//on each "update web msg" coming from the timer.js:
+  ipc.on('updateWeb', function(event,message) { 
+    //loadNewContent('file://' + __dirname +"/projects/"+ message);
+    console.log(message)
+    runtimeState.current_project_index=message
+    loadNewContent(runtimeState.current_project_index);
+  });  
+}
+
+
+/*
+
+*/
 function loadSettings(){
 //1 get all settings stored in database and put it in the right variables
   cfg.simpleplayList= localStorage.getItem("simpleplayList")=="true"?true:false;
@@ -44,12 +93,14 @@ function loadSettings(){
           loadPlaylistFile(jsonFileCMDline)
     }
     else{ //NO se ha pasado el archivo por la linea de comandos
-      
       populatePlaylistSection(true);    
-    }
-    
+    }    
 }
 
+/*
+Obtiene la playlist del dia o la playlist unica desde localstorage y 
+la carga con loadPlaylistFile. Muestra el bloque de playlist unica o playlist semanal
+*/
 function populatePlaylistSection(loadPlaylist){
   if(cfg.simpleplayList==true){
     cfg.playlistFile=localStorage.getItem("singleFile");
@@ -59,6 +110,8 @@ function populatePlaylistSection(loadPlaylist){
     }else{ //UNA PLAYLIST PARA CADA DIA
       var d = new Date();
       var n = d.getDay();
+      if(n==0) n=7;  n--;// Sunday is 0, Monday is 1, and so on: I change it to monday==0
+     
       cfg.playlistDays = JSON.parse(localStorage.getItem("multipleFiles"));
       cfg.playlistFile=cfg.playlistDays[n];
       if(loadPlaylist){        
@@ -79,21 +132,59 @@ function populatePlaylistSection(loadPlaylist){
       $(this).text(cfg.playlistDays[index].split(/(\\|\/)/g).pop())
       var d = new Date();
       var n = d.getDay();
+      if(n==0) n=7;  n--;// Sunday is 0, Monday is 1, and so on: I change it to monday==0
       if(n==index)
         $(this).addClass('active')
-
     });
   }
 }
 
 
+function loadPlaylistFile(path){
+  //if(runtimeState.firstTime==true && path=="") return; // si aun no se ha cargado playlist pq es la primera vez salimos sin mostrar errores
+      $('#playlist-name').empty().html(path)
+      try{
+        var localfile=require(path);   
+      }catch(err){
+        alert("Playlist file not found or is not correct. \n  Path: "+path+"\n  Error:\n " + err );
+        return;
+      }
+      preprocessPlaylist(localfile.playlist)
+      populateHtmlPlaylist(localfile.playlist)
+      //checkPlaylist(localFile) TODO
+      cfg.proyectos_local=localfile.playlist;
+      cfg.playlistContentFolder=localfile.folder;
+      //project_folder=localfile.playlist;
+      cfg.playlistFilePath=path;
+      p=require('path')
+      cfg.folderPath=p.dirname(path);      
+      return localfile.playlist;
+}
 
-var runtimeState={}
-runtimeState.currentTextTimeout=null; //temporizador que controla momento en el que el texto termina
-runtimeState.imageSlideIndex=1; //si es un player de imagenes esta es la actual;
-runtimeState.imageSlideTimeout=null;//si es un player de imagenes este es el timeout del control de tiempo;
-runtimeState.current_project_index=0;
+function preprocessPlaylist(listObject){
+
+
+}
+
+/*rellena playlist */
+function populateHtmlPlaylist(listObject){
+     $('#projects-wrapper').empty()
+     $.each(listObject,function(index,value){
+        $('#projects-wrapper').append('<li> \
+                     <a href="#" data-index="'+index+'"+class="'+value.tipo+
+                     ' prj-link" data-name="'+value.url+'"> <span class="name">'+
+                     value.url+'</span>' +  '<span class="tipo">'+value.tipo+'</span>' +
+                     '<span class="duracion">'+value.duracion+'</span>'+ '</a> </li>');
+      });
+}
+
+
+
+
+
+
 $(function() {  
+  emptySettings();
   initSettings();
   init();
   /*listener*/
@@ -232,69 +323,6 @@ function loadNewContent(project_index){
       }, hmsToMilliSecondsOnly(jsonProjectFile.text_timeout));
   }
 }
-
-function loadPlaylistFile(path){
-      $('#playlist-name').empty().html(path)
-      try{
-        var localfile=require(path);   
-      }catch(err){
-        alert("Playlist file not found or is not correct.  Error:\n " + err );
-        return;
-      }
-      preprocessPlaylist(localfile.playlist)
-      populateHtmlPlaylist(localfile.playlist)
-      //checkPlaylist(localFile) TODO
-      cfg.proyectos_local=localfile.playlist;
-      cfg.playlistContentFolder=localfile.folder;
-      //project_folder=localfile.playlist;
-      cfg.playlistFilePath=path;
-      p=require('path')
-      cfg.folderPath=p.dirname(path);      
-      return localfile.playlist;
-}
-
-function preprocessPlaylist(listObject){
-
-
-}
-
-function populateHtmlPlaylist(listObject){
-
-     $('#projects-wrapper').empty()
-     $.each(listObject,function(index,value){
-        $('#projects-wrapper').append('<li> \
-                     <a href="#" data-index="'+index+'"+class="'+value.tipo+
-                     ' prj-link" data-name="'+value.url+'"> <span class="name">'+
-                     value.url+'</span>' +  '<span class="tipo">'+value.tipo+'</span>' +
-                     '<span class="duracion">'+value.duracion+'</span>'+ '</a> </li>');
-      });
-}
-
-function init(){
-   loadSettings()
-  var remote = require('remote');
-
-  //1º cargo lista actual
-   //1.1º por si acaso vengo de un reload de la ventana, paro el timer
-  var tempo=remote.require('./timers.js');
-  tempo.stop();
-
-  var util=remote.require('./util.js');
-   //envio lista de proyectos al hilo principal
-  util.setProyectList(cfg.proyectos_local)
-
-  var ipc =  require("electron").ipcRenderer;
-
-
-//on each "update web msg" coming from the timer.js:
-  ipc.on('updateWeb', function(event,message) { 
-    //loadNewContent('file://' + __dirname +"/projects/"+ message);
-    console.log(message)
-    runtimeState.current_project_index=message
-    loadNewContent(runtimeState.current_project_index);
-  });  
-}
-
 
 
 
