@@ -56,9 +56,8 @@
                         <div class="ticker__item"></div>
                     </div>
                 </div>
-
                 </div>
-                <div id="text-body"></div>
+                <div id="text-body"> </div>
             </div>
             <video id="content-video" class="videoproyecto fullfachada content-inner-container" muted width="192" height="125" autoplay >
               <source id="sourceVideo" src="" type="video/mp4">
@@ -79,12 +78,16 @@
       <div class="row">
         <div class="col-md-6 ">
           <div id="controls" class="whitebox">
-            <div class="smalltext"> Playing: </div>
-            <div id="proyecto-actual"> </div>
+            <div id="playinginfo">
+              <div class="smalltext"> Playing: </div>
+              <div id="proyecto-actual"> </div>
+            </div>
             <div id="control-inner">
               <a href="#" id="play"> <span class="icon-control-play" aria-hidden="true"></span> </a> 
-              <a href="#" id="stop"> <span class="" style="width:1em; height:1em; display:inline-block; border-radius: 3px; border: 2px solid #B8B8B8" aria-hidden="true"></span> </a> 
-              <a href="#" id="pause"> <span class="icon-control-pause" aria-hidden="true"></span> </a>
+              <a href="#" id="stop"> <span class="" style="width:1em; height:1em; display:inline-block; border-radius: 3px; border: 2px solid " aria-hidden="true"></span> </a> 
+              <!--<a href="#" id="loop" class="active" alt="avanza en la playlist si está activo. Si no se queda siempre en el mismo"> 
+                <span class="glyphicon glyphicon-sort-by-attributes-alt"></span> <span style="font-size:0.5em" class="glyphicon glyphicon-lock"></span>
+              </a>-->
             </div>
           </div>
            <div id="playlists-list" class="whitebox">
@@ -97,7 +100,8 @@
                   <label for="singleFile">
                         Playlist <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
                       </label>                      
-                 <input type='file' id='singleFile' name='singleFile'/> <a href="#" class="load-playlist-btn-single" data-number="3"> <span class="glyphicon glyphicon-upload"></span> </a> 
+                 <input type='file' id='singleFile' name='singleFile'/> 
+                 <!--<a href="#" class="load-playlist-btn-single" data-number="3"> <span class="glyphicon glyphicon-upload"></span> </a> --> 
                 </div> 
              </div>
 
@@ -146,7 +150,8 @@
                   </div>   
                   <div class="day-upload">
                       <label for="multipleFileSabado">
-                        <span class="playlist-day"> Sabado </span> <span class="filename"> no seleccionado</span> <span class="icon-folder" aria-hidden="true"> </span>                  
+                        <span class="playlist-day"> Sabado </span> <span class="filename"> no seleccionado</span> 
+                        <span class="icon-folder" aria-hidden="true"> </span>                  
                       </label>
                       <input class='multipleFile multipleFileSabado' name='multipleFileSabado' id='multipleFileSabado' type="file"/> <a href="#" class="load-playlist-btn" data-number="5"> 
                       <span class="glyphicon glyphicon-upload"></span> 

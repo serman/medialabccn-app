@@ -73,7 +73,7 @@ h2{
   /* Lista de reproducció: */
 font-family: open_sanslight;;
 font-size: 18px;
-color: @highcolor;
+color: #fff;
 text-align: left;
 text-transform: uppercase;
 margin-bottom: 10px;
@@ -118,13 +118,16 @@ h4.subtitle{
     background-color:black;
     display: none;
     div#text-body{
-      padding:3px;
-      padding-top:40px;
-      font-size: 10px;
+      padding:5px;
+      //padding-top:20px;
+      font-size: 12px;
       font-family: 'helvetica', 'arial';
       text-align: center;
+      display: inline-block;
+      vertical-align: middle;
       /*background-color: red;*/
     }
+
      div#text-head1{
       padding-top:2px;
       margin-left:72px;
@@ -271,18 +274,28 @@ h4.subtitle{
   .computerfont;
   .smalltext;
   margin-left:1em;
-  color:@highcolor;
+  
 }
 
 
 
 #controls{
-  a#play,a#stop,a#pause{
+  #playinginfo{
+    transition: opacity 0.5s;
+  }
+  a#play,a#stop,a#loop{
     display: inline-block;
     margin-left:2em;
     font-size: 30px;
 
   }
+    a#play.active span,a#stop.active span, a#loop.active span{
+      color:@highcolor;
+    }
+    a#stop span{
+      border-color: #B8B8B8;
+    }
+
   #control-inner{
     text-align: center;
   }
@@ -341,7 +354,7 @@ h4.subtitle{
     animation-name: ticker;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    animation-duration: 10s; // tweak based on number of items/desired speed
+    animation-duration: 12s; // tweak based on number of items/desired speed
 }
 
 /***********/
@@ -361,9 +374,20 @@ footer{
 }
 
 
-#singleFile .multipleFile{
+#singleFile span, .multipleFile span{
 
 }
+span.icon-folder, span.glyphicon-upload, #playlist-panel-save{
+  color: @highcolor;
+}
+a#playlist-panel-save{
+  display: none;
+}
+
+a#playlist-panel-save.changed{
+  color:#EE396B;
+}
+
 span.filename{
   display: inline-block;
   border: 1px solid #6A6A67;
@@ -372,7 +396,7 @@ span.filename{
   margin:0px 4px;
   padding-bottom: 2px;
   width: 200px;
-  color:#6FDAA0;
+  color:@txtcolor ;
   .computerfont
 }
 span.filename.active{

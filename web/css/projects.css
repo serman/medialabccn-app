@@ -54,7 +54,7 @@ h2 {
   /* Lista de reproducció: */
   font-family: open_sanslight;
   font-size: 18px;
-  color: #6FDAA0;
+  color: #fff;
   text-align: left;
   text-transform: uppercase;
   margin-bottom: 10px;
@@ -96,11 +96,12 @@ h4.subtitle {
   display: none;
 }
 #fachada #text-container div#text-body {
-  padding: 3px;
-  padding-top: 40px;
-  font-size: 10px;
+  padding: 5px;
+  font-size: 12px;
   font-family: 'helvetica', 'arial';
   text-align: center;
+  display: inline-block;
+  vertical-align: middle;
   /*background-color: red;*/
 }
 #fachada #text-container div#text-head1 {
@@ -234,14 +235,24 @@ h4.subtitle {
   font-size: 11px;
   font-family: open_sansregular;
   margin-left: 1em;
-  color: #6FDAA0;
+}
+#controls #playinginfo {
+  transition: opacity 0.5s;
 }
 #controls a#play,
 #controls a#stop,
-#controls a#pause {
+#controls a#loop {
   display: inline-block;
   margin-left: 2em;
   font-size: 30px;
+}
+#controls a#play.active span,
+#controls a#stop.active span,
+#controls a#loop.active span {
+  color: #6FDAA0;
+}
+#controls a#stop span {
+  border-color: #B8B8B8;
 }
 #controls #control-inner {
   text-align: center;
@@ -290,7 +301,7 @@ h4.subtitle {
   animation-name: ticker;
   animation-iteration-count: 1;
   animation-timing-function: linear;
-  animation-duration: 10s;
+  animation-duration: 12s;
 }
 /***********/
 footer {
@@ -305,6 +316,17 @@ footer {
 .day-upload label {
   cursor: pointer;
 }
+span.icon-folder,
+span.glyphicon-upload,
+#playlist-panel-save {
+  color: #6FDAA0;
+}
+a#playlist-panel-save {
+  display: none;
+}
+a#playlist-panel-save.changed {
+  color: #EE396B;
+}
 span.filename {
   display: inline-block;
   border: 1px solid #6A6A67;
@@ -313,7 +335,7 @@ span.filename {
   margin: 0px 4px;
   padding-bottom: 2px;
   width: 200px;
-  color: #6FDAA0;
+  color: #B8B8B8;
   font-family: courier;
   font-weight: lighter;
 }

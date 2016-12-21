@@ -1,7 +1,0 @@
-{
-  "text": "este es el texto que se muestra <br/> en la pantalla",
-  "options": { "effect": "bounceInLeft", "delay": 10 },
-  "text_timeout":1000,
-  "resource":"tes1.mp4",
-  "fullfacade":true
-}

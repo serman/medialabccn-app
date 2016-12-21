@@ -6,12 +6,19 @@ $(function() {
       file1=$(this)[0].files[0];
       var fullpath=$(this).val()   
       $(this).parent().children('label').children('.filename').html(fullpath.split(/(\\|\/)/g).pop())
+      $("#playlist-panel-save").addClass("changed")
+      $("#playlist-panel-save").empty().html("Guardar Cambios")
+      $("#playlist-panel-save").show();
+      loadSingleFile();
     });
 
    $(".multipleFile").change(function() {
       console.log("multiplefile select")
       var fullpath=$(this).val()   
       $(this).parent().children('label').children('.filename').html(fullpath.split(/(\\|\/)/g).pop())
+      $("#playlist-panel-save").addClass("changed")
+      $("#playlist-panel-save").empty().html("Guardar Cambios")
+      $("#playlist-panel-save").show();
     });
 /*******/
 
@@ -19,6 +26,7 @@ $(function() {
 
    $('#playlist-panel-save').on('click', function(event){
     console.log("saveing")
+
       if(cfg.simpleplayList){ //solo un archivo
         localStorage.setItem("simpleplayList", true);
         var file1=$('#singleFile')[0].files[0]; //comando para cargar ruta completa:
@@ -43,6 +51,8 @@ $(function() {
         });
           localStorage.setItem("multipleFiles", JSON.stringify(archivos) ); //nombre del archivo playlist .json
       }
+      $("#playlist-panel-save").removeClass("changed")
+      $("#playlist-panel-save").empty().html("cambios guardados")
    });
 
 /*
@@ -84,17 +94,12 @@ $(function() {
         util.setProyectList(cfg.proyectos_local)
       });
 
+      /*
+      DEPRECATED
+       */
       $('a.load-playlist-btn-single').on('click', function(event){   
         event.preventDefault();
-        var f1=$('#singleFile')[0].files[0].path;
-        cfg.playlistFile= f1;
-        loadPlaylistFile(cfg.playlistFile);
-
-        $('.filename.active').removeClass("active")
-        $(this).parent().find('.filename').addClass("active");
-          var remote = require('remote');
-        var util=remote.require('./util.js');
-        util.setProyectList(cfg.proyectos_local)
+        loadSingleFile();
       });
 
 /* muestra oculta panel multiples dias **/
@@ -111,6 +116,18 @@ $(function() {
 /********* FIN GUARDAR Y MANIPULAR PLAYLISTS ****/   
 
 });
+
+function loadSingleFile(){
+   var f1=$('#singleFile')[0].files[0].path;
+        cfg.playlistFile= f1;
+        loadPlaylistFile(cfg.playlistFile);
+
+        $('.filename.active').removeClass("active")
+        $(this).parent().find('.filename').addClass("active");
+          var remote = require('remote');
+        var util=remote.require('./util.js');
+        util.setProyectList(cfg.proyectos_local)
+}
 
 
 
